@@ -1,0 +1,648 @@
+[
+  {
+    "id": "res_001",
+    "name": "Fuego",
+    "category": "Continental / Fast Food",
+    "location": "Phase 2, Hayatabad",
+    "menu": [
+      {"item": "Chicago Grilled Burger", "price": 745},
+      {"item": "Fuego Special Burger", "price": 980},
+      {"item": "Special Chow Mein", "price": 799},
+      {"item": "Chicken Chili Dry with Rice", "price": 999},
+      {"item": "Alfredo Pasta", "price": 799},
+      {"item": "Hot & Sour Soup", "price": 749},
+      {"item": "Fish & Chips", "price": 979},
+      {"item": "Creamy Melt Pizza (Small)", "price": 729},
+      {"item": "Honey Chilli Wings", "price": 499},
+      {"item": "Crown Crust Fajita Pizza (Large)", "price": 1249}
+    ],
+    "deals": ["Bank Card Discounts (15-20%)", "Lunch Platters available 12pm-4pm"]
+  },
+  {
+    "id": "res_003",
+    "name": "Cheezious",
+    "category": "Pizza / Fast Food",
+    "location": "HBK Arena, Ring Road",
+    "menu": [
+      {"item": "Crown Crust Pizza (Large)", "price": 1550},
+      {"item": "Bazinga Burger", "price": 630},
+      {"item": "Fettuccine Alfredo Pasta", "price": 1050},
+      {"item": "Cheezy Sticks (6pcs)", "price": 630},
+      {"item": "Oven Baked Wings", "price": 600},
+      {"item": "Behari Rolls (4pcs)", "price": 690},
+      {"item": "Chicken Tandoori Pizza", "price": 690},
+      {"item": "Crunchy Chicken Macaroni", "price": 950},
+      {"item": "Flaming Wings", "price": 650},
+      {"item": "Calzone Chunks (4pcs)", "price": 1150}
+    ],
+    "deals": ["Somewhat Amazing Deal 1: Rs. 1250", "Midnight Deals after 11 PM"]
+  },
+  {
+    "id": "res_005",
+    "name": "Ghwakhe Steakhouse",
+    "category": "Turkish & Steaks",
+    "location": "Board Bazar, Peshawar",
+    "menu": [
+      {"item": "Tenderloin (Salt Bae Style)", "price": 3199},
+      {"item": "Turkish Adana Kabab", "price": 1799},
+      {"item": "Persian Barg Kabab", "price": 1999},
+      {"item": "Philly Cheese Steak Burger", "price": 1399},
+      {"item": "Beef Smash Burger (Double)", "price": 899},
+      {"item": "Tomahawk Steak", "price": 2599},
+      {"item": "Parmesan Chicken Pasta", "price": 1599},
+      {"item": "Mutton Chops", "price": 1499},
+      {"item": "Blue Colada Mocktail", "price": 499},
+      {"item": "Beef Pizza (13 inch)", "price": 2199}
+    ],
+    "deals": ["Complimentary dessert on bill over 10k"]
+  },
+  {
+    "id": "res_008",
+    "name": "Habibi",
+    "category": "Traditional / BBQ",
+    "location": "Phase 3 Chowk, Hayatabad / University Road",
+    "menu": [
+      {"item": "Kabuli Pulao", "price": 950},
+      {"item": "Mutton Shinwari Karahi (1kg)", "price": 3300},
+      {"item": "Chapli Kabab (Per piece)", "price": 450},
+      {"item": "Habibi Special BBQ Platter", "price": 6450},
+      {"item": "Chicken Tikka", "price": 490},
+      {"item": "Mutton Ribs", "price": 3150},
+      {"item": "Malai Tikka Boti", "price": 1470},
+      {"item": "Mutton Makhni Handi", "price": 2450},
+      {"item": "Chicken Hari Mirch", "price": 1800},
+      {"item": "Zafrani Seekh Kabab", "price": 1150}
+    ],
+    "deals": ["Student Lunch Box (Pulao + Tikka + Roti) - Rs. 650"]
+  },
+  {
+    "id": "res_015",
+    "name": "Baskin Robbins",
+    "category": "Ice Cream",
+    "location": "HBK Arena, Ring Road",
+    "menu": [
+      {"item": "Single Scoop Cup", "price": 599},
+      {"item": "Pralines N Cream (Scoop)", "price": 650},
+      {"item": "Chocolate Mousse Royale (Scoop)", "price": 650},
+      {"item": "Cotton Candy (Scoop)", "price": 650},
+      {"item": "Pint (5 Scoops)", "price": 2599},
+      {"item": "Quart (10 Scoops)", "price": 4499},
+      {"item": "Mini Round Cake", "price": 749},
+      {"item": "Incredible Cake (Serves 8)", "price": 4299},
+      {"item": "Cappuccino Blast Shake", "price": 950},
+      {"item": "Brownie Biscuit Sundae", "price": 850}
+    ],
+    "deals": ["2 Single Scoops for Rs. 1050"]
+  },
+  {
+    "id": "res_016",
+    "name": "Asian Wok",
+    "category": "Chinese & Thai",
+    "location": "Cantonment, Peshawar",
+    "menu": [
+      {"item": "Hot & Sour Soup", "price": 945},
+      {"item": "Chicken Chow Mein", "price": 1595},
+      {"item": "Asian Wok Special Beef", "price": 2325},
+      {"item": "Prawn Tempura (6pcs)", "price": 4195},
+      {"item": "Kung Pao Chicken", "price": 1850},
+      {"item": "Beef with Dry Chillies", "price": 2325},
+      {"item": "Chicken Fried Rice", "price": 1375},
+      {"item": "Crispy Finger Fish", "price": 2675},
+      {"item": "Steamed Chicken Dumplings", "price": 2145},
+      {"item": "Sesame Honey Chili Chicken", "price": 2795}
+    ],
+    "deals": ["Family servings (Suitable for 3 people)"]
+  },
+  {
+    "id": "res_017",
+    "name": "Jalil Kabab House",
+    "category": "Traditional",
+    "location": "Phase 3 Chowk, Hayatabad",
+    "menu": [
+      {"item": "Special Chapli Kabab (Pc)", "price": 160},
+      {"item": "Special Chicken Pulao", "price": 795},
+      {"item": "Chicken Handi", "price": 1150},
+      {"item": "Seekh Kabab Karahi", "price": 830},
+      {"item": "Dhaka Chicken", "price": 1490},
+      {"item": "Sada Pulao", "price": 480},
+      {"item": "Chicken Tikka", "price": 430},
+      {"item": "Malai Boti", "price": 960},
+      {"item": "Special Lunch Box", "price": 1250},
+      {"item": "Fresh Salad", "price": 110}
+    ],
+    "deals": ["Deal 1: 2 Chapli Kabab + 1 Naan for Rs. 293"]
+  },
+  {
+    "id": "res_018",
+    "name": "Cafe Crunch",
+    "category": "Continental & Cafe",
+    "location": "University Town",
+    "menu": [
+      {"item": "Super Nachos", "price": 709},
+      {"item": "Moroccan Chicken", "price": 1749},
+      {"item": "Fettuccine Alfredo Pasta", "price": 1289},
+      {"item": "Crunch Panini", "price": 929},
+      {"item": "Chicken Cheese Volvo", "price": 1699},
+      {"item": "Chicken Malai Boti", "price": 1419},
+      {"item": "Special Naurangi Platter", "price": 2549},
+      {"item": "Lotus Cheesecake Slice", "price": 799},
+      {"item": "Molten Lava Cake", "price": 699},
+      {"item": "Special Soup", "price": 469}
+    ],
+    "deals": ["Tea-time discounts 4pm-7pm"]
+  },
+  {
+    "id": "res_019",
+    "name": "Burning Brownie",
+    "category": "Bakery & Cafe",
+    "location": "Garrison Park, Cantt",
+    "menu": [
+      {"item": "Steak & Cheese Sandwich", "price": 1200},
+      {"item": "Grilled Chicken Sandwich", "price": 1100},
+      {"item": "Chocolate Mud Cake Slice", "price": 577},
+      {"item": "Milk Cake Slice", "price": 515},
+      {"item": "Baked Cheese Cake", "price": 3859},
+      {"item": "Ferrero Rocher Cake", "price": 3240},
+      {"item": "Iced Mocha", "price": 810},
+      {"item": "Chocolate Peanut Butter Shake", "price": 810},
+      {"item": "Latte", "price": 652},
+      {"item": "Cheese Melt Sandwich", "price": 905}
+    ],
+    "deals": ["Customizable birthday message on cakes"]
+  },
+  {
+    "id": "res_020",
+    "name": "Bubble Brews",
+    "category": "Beverages & Desserts",
+    "location": "University Road",
+    "menu": [
+      {"item": "Latte Chewy Boba Milk Tea", "price": 620},
+      {"item": "Blueberry Boba Milk Tea", "price": 680},
+      {"item": "Kit Kat Chewy Boba Shake", "price": 680},
+      {"item": "Nutella Waffles Bites", "price": 500},
+      {"item": "Oreo Chewy Boba Shake", "price": 620},
+      {"item": "Lotus Chewy Boba Shake", "price": 680},
+      {"item": "Mango Ice Cream Shake", "price": 500},
+      {"item": "Praline Ice Cream", "price": 220},
+      {"item": "Pina Colada Shake", "price": 500},
+      {"item": "Cold Coffee Boba Shake", "price": 620}
+    ],
+    "deals": ["Combo: Boba Tea + Waffle Bites for Rs. 1050"]
+  },
+  {
+    "id": "res_021",
+    "name": "Tim Hortons",
+    "category": "Coffee & Bakery",
+    "location": "Garrison Park, Cantt",
+    "menu": [
+      {"item": "Iced Vanilla Bean Matcha Latte", "price": 1218},
+      {"item": "Double Double Brewed Coffee", "price": 725},
+      {"item": "Caramel Macchiato", "price": 841},
+      {"item": "Tims Original Iced Capp", "price": 1044},
+      {"item": "Lotus Biscoff Iced Capp", "price": 1044},
+      {"item": "Grilled Chicken Jalapeno Sandwich", "price": 1264},
+      {"item": "Chicken Caesar Panini", "price": 1264},
+      {"item": "Filled Boston Cream Donut", "price": 464},
+      {"item": "Premium Triple Chocolate Donut", "price": 464},
+      {"item": "Classic Honey Dip Timbit", "price": 128}
+    ],
+    "deals": ["App-only discounts via Tim Hortons PK app", "Duo deals on donuts and coffee"]
+  },
+  {
+    "id": "res_022",
+    "name": "McDonald's",
+    "category": "Fast Food",
+    "location": "HBK Arena, Ring Road",
+    "menu": [
+      {"item": "Big Mac", "price": 950},
+      {"item": "Spicy McCrispy Chicken Deluxe", "price": 1150},
+      {"item": "McChicken", "price": 530},
+      {"item": "Quarter Pounder with Cheese", "price": 1050},
+      {"item": "6 Piece Chicken McNuggets", "price": 550},
+      {"item": "Large McFries", "price": 450},
+      {"item": "McFlurry Oreo", "price": 480},
+      {"item": "Apple Pie", "price": 450},
+      {"item": "Caramel Sundae", "price": 380},
+      {"item": "Egg McMuffin (Breakfast Only)", "price": 450}
+    ],
+    "deals": ["McCafé Duo: 2 Cups for Rs. 900", "Spicy McCrispy + Reg Drink for Rs. 675"]
+  },
+  {
+    "id": "res_023",
+    "name": "Wild Wings",
+    "category": "Wings & Burgers",
+    "location": "HBK Arena, Ring Road",
+    "menu": [
+      {"item": "Traditional Wings (Small 10 Pcs)", "price": 1299},
+      {"item": "Boneless Bites (Small 10 Pcs)", "price": 1399},
+      {"item": "Chicken Tacos with Salsa", "price": 999},
+      {"item": "Loaded Chicken Philly Fries", "price": 999},
+      {"item": "The Loaded Trio Fries", "price": 999},
+      {"item": "Signature Crunch Burger", "price": 1099},
+      {"item": "Nashville Crisp Chicken Burger", "price": 1099},
+      {"item": "Chili Cheetos Chicken Burger", "price": 1099},
+      {"item": "Mushroom Swiss Beef Burger", "price": 1349},
+      {"item": "Chicago Beef Burger (with egg)", "price": 1349}
+    ],
+    "deals": ["Family Wings Bundle (42 Pcs) - Rs. 3999"]
+  },
+  {
+    "id": "res_024",
+    "name": "Voila Cafe",
+    "category": "Continental / Cafe",
+    "location": "HBK Arena, Ring Road",
+    "menu": [
+      {"item": "Bread Bowl Cheesy Pasta", "price": 1149},
+      {"item": "Spicy Chicken Parmesan Pasta", "price": 1349},
+      {"item": "Meat Trilogy Platter", "price": 1349},
+      {"item": "Hot & Spicy Peri Peri Chicken", "price": 1649},
+      {"item": "Mild Beef Loaded Mushroom Burger", "price": 1099},
+      {"item": "Chicken Stuffed Strips", "price": 899},
+      {"item": "Crown Crust Pizza", "price": 1449},
+      {"item": "Chicken Mushroom Lasagna", "price": 1349},
+      {"item": "Oreo Shake", "price": 499},
+      {"item": "Signature Moroccan Steak", "price": 1649}
+    ],
+    "deals": ["Meat Trilogy Platter recommended for groups"]
+  },
+  {
+    "id": "res_025",
+    "name": "Layers",
+    "category": "Desserts / Bakery",
+    "location": "Phase 2, Hayatabad",
+    "menu": [
+      {"item": "Lotus Biscoff Three Milk Cake", "price": 3200},
+      {"item": "Ferrero Rocher Cake (2.5 Lbs)", "price": 3500},
+      {"item": "Belgian Malt Cake", "price": 2600},
+      {"item": "Chocolate Dreamcake", "price": 3100},
+      {"item": "Pistachio Three Milk Cake", "price": 2600},
+      {"item": "Red Velvet Cake", "price": 2300},
+      {"item": "Nutella Cookie", "price": 320},
+      {"item": "Triple Chocolate Cookie", "price": 320},
+      {"item": "Nutella Sundae Cup", "price": 450},
+      {"item": "Lotus Mini Donuts (Box)", "price": 950}
+    ],
+    "deals": ["Discounted daily on selected 'Mini' desserts"]
+  },
+  {
+    "id": "res_026",
+    "name": "Roger Cafe",
+    "category": "Fast Food & Pizza",
+    "location": "Phase 6, Hayatabad",
+    "menu": [
+      {"item": "Roger Special Pizza (Large)", "price": 1650},
+      {"item": "Crown Crust Pizza (Large)", "price": 1700},
+      {"item": "Bihari Kabab Pizza", "price": 1300},
+      {"item": "Mexican Chicken Sandwich", "price": 650},
+      {"item": "Fettuccine Alfredo Pasta", "price": 500},
+      {"item": "Pizza Fries (Loaded)", "price": 700},
+      {"item": "Starter Platter (Bihari Roll + Wings)", "price": 1000},
+      {"item": "Pizza Stacker (Layered Bread)", "price": 950},
+      {"item": "Euro Sandwich", "price": 650},
+      {"item": "2 Zinger Deal (with Drink)", "price": 972}
+    ],
+    "deals": ["Do It Deal: Large Pizza + Starter Platter + 1.5L Drink for Rs. 2450"]
+  },
+  {
+    "id": "res_027",
+    "name": "Mr Cod",
+    "category": "Seafood & Fast Food",
+    "location": "Phase 2, Hayatabad",
+    "menu": [
+      {"item": "1 Fish-O-Fillet Burger Deal", "price": 799},
+      {"item": "Codzilla Burger", "price": 850},
+      {"item": "Chicken Tower Burger", "price": 699},
+      {"item": "4 Finger Fish + Fries + Drink", "price": 412},
+      {"item": "Codra Crunch (4 Burgers + Drink)", "price": 1450},
+      {"item": "Margherita Pizza (Large)", "price": 1499},
+      {"item": "Chicken Mexicana Pizza", "price": 1250},
+      {"item": "Behari Roll Platter", "price": 850},
+      {"item": "Bouncer Deal (1 Pizza + 2 Burgers)", "price": 1450},
+      {"item": "Crispy Fish Pieces (2 Pcs)", "price": 550}
+    ],
+    "deals": ["25% Off on 'Meal 1' to 'Meal 4' (Select timings)"]
+  },
+  {
+    "id": "res_028",
+    "name": "Shinwari Jangora",
+    "category": "Traditional / BBQ",
+    "location": "Phase 3 Chowk, Hayatabad",
+    "menu": [
+      {"item": "Dumba Namkeen Tikka (Per Kg)", "price": 3200},
+      {"item": "Mutton Rosh Dumba", "price": 3600},
+      {"item": "Mutton Machli Gosht", "price": 4200},
+      {"item": "Chicken Namkeen Tikka", "price": 1200},
+      {"item": "Afghani Boti (Half Kg)", "price": 2000},
+      {"item": "Mutton Chapli Kabab (Large)", "price": 400},
+      {"item": "Firni (Dessert)", "price": 170},
+      {"item": "Peshawari Qehwa", "price": 100},
+      {"item": "Muhabbat Wali Chai (Gurr)", "price": 200},
+      {"item": "Afghani Roti", "price": 120}
+    ],
+    "deals": ["Authentic 'Dera' style seating for large families"]
+  },
+  {
+    "id": "res_029",
+    "name": "Silver Dragon",
+    "category": "Chinese",
+    "location": "University Road",
+    "menu": [
+      {"item": "Hot & Sour Soup", "price": 500},
+      {"item": "Special Chinese Soup", "price": 600},
+      {"item": "Chicken Chow Mein", "price": 800},
+      {"item": "Special Dragon Chow Mein", "price": 900},
+      {"item": "Szechuan Momos", "price": 750},
+      {"item": "Sesame Honey Momos", "price": 750},
+      {"item": "Kung Pao Chicken Chips", "price": 850},
+      {"item": "Chicken Manchurian Chips", "price": 850},
+      {"item": "Chicken Corn Soup", "price": 360},
+      {"item": "Sesame Honey Chicken Chips", "price": 850}
+    ],
+    "deals": ["10-15% Off on Foodpanda deliveries"]
+  },
+  {
+    "id": "res_030",
+    "name": "Piyali (Pirch Piyali)",
+    "category": "BBQ & Rolls",
+    "location": "Phase 2, Hayatabad",
+    "menu": [
+      {"item": "Chicken Grilled Sandwich", "price": 549},
+      {"item": "Malai Tikka Piece (Breast)", "price": 429},
+      {"item": "Chicken Cheese Paratha", "price": 439},
+      {"item": "Bihari Roll", "price": 599},
+      {"item": "Pirch Piyali Special Pizza", "price": 599},
+      {"item": "Crown Crust Pizza (Large)", "price": 1399},
+      {"item": "Reshmi Kabab (Plate)", "price": 399},
+      {"item": "Aloo Cheese Paratha", "price": 249},
+      {"item": "Pizza Loaded Fries", "price": 399},
+      {"item": "Champ Burger", "price": 549}
+    ],
+    "deals": ["Deal: Club Sandwich + Grilled Sandwich + Pepsi for Rs. 1199"]
+  },
+  {
+    "id": "res_031",
+    "name": "Ottimo Cafe",
+    "category": "Continental / Italian",
+    "location": "Phase 2, Hayatabad",
+    "menu": [
+      {"item": "Fettuccine Alfredo", "price": 1250},
+      {"item": "Chicken Tarragon Steak", "price": 1650},
+      {"item": "Stuffed Chicken Florentine", "price": 1750},
+      {"item": "Moroccan Chicken", "price": 1695},
+      {"item": "Grilled Fish with Lemon Butter", "price": 1850},
+      {"item": "Classic Beef Burger", "price": 1050},
+      {"item": "Club Sandwich", "price": 950},
+      {"item": "Prawn Tempura", "price": 2400},
+      {"item": "Lotus Cheesecake Slice", "price": 850},
+      {"item": "Blueberry Smoothie", "price": 750}
+    ],
+    "deals": ["Business Lunch: Main + Drink - Rs. 1499", "Afternoon Tea Platter for 2"]
+  },
+  {
+    "id": "res_032",
+    "name": "Shiraz Restaurant",
+    "category": "Buffet / Fine Dining",
+    "location": "University Road",
+    "menu": [
+      {"item": "Dinner Buffet (Adult)", "price": 3500},
+      {"item": "Lunch Buffet (Adult)", "price": 2600},
+      {"item": "Mutton Karahi (Full)", "price": 3800},
+      {"item": "Chicken Tikka (Breast)", "price": 550},
+      {"item": "Special Seekh Kabab", "price": 1100},
+      {"item": "Mutton Handi", "price": 2850},
+      {"item": "Afghani Pulao", "price": 1100},
+      {"item": "Paneer Reshmi Handi", "price": 1650},
+      {"item": "Gulab Jamun (2pcs)", "price": 350},
+      {"item": "Peshawari Qehwa", "price": 150}
+    ],
+    "deals": ["Kids under 5 eat free", "15% off for large group bookings"]
+  },
+  {
+    "id": "res_033",
+    "name": "Salt & Lamb",
+    "category": "Continental / Steakhouse",
+    "location": "Garrison Park, Cantt",
+    "menu": [
+      {"item": "Prime Rib-Eye Steak", "price": 2850},
+      {"item": "Mutton Namkeen Rosh", "price": 1550},
+      {"item": "Afghani Beef Tikka (12 Pcs)", "price": 2080},
+      {"item": "Beef Chili Dry with Rice", "price": 1250},
+      {"item": "Mushroom Swiss Beef Burger", "price": 1350},
+      {"item": "Special Tandoori Fish", "price": 1649},
+      {"item": "Chicken Nachos", "price": 1048},
+      {"item": "Mexican Chicken Steak", "price": 1690},
+      {"item": "BBQ Mixed Platter", "price": 4290},
+      {"item": "Baked Potato with Cheese", "price": 240}
+    ],
+    "deals": ["Combo: Steak + Drink + Soup for Rs. 2499"]
+  },
+  {
+    "id": "res_034",
+    "name": "MFZ CornDog",
+    "category": "Korean / Fast Food",
+    "location": "HBK Arena, Ring Road",
+    "menu": [
+      {"item": "Potato CornDog", "price": 360},
+      {"item": "Flaming Cheeto CornDog", "price": 357},
+      {"item": "Classic Korean CornDog", "price": 349},
+      {"item": "King Shapater (Arabic Wrap)", "price": 599},
+      {"item": "Boom Burger", "price": 450},
+      {"item": "Shakshoka Fries", "price": 550},
+      {"item": "Chicago Hotdog Burger", "price": 430},
+      {"item": "Zinger Coated CornDog", "price": 599},
+      {"item": "Cheese Hotdog", "price": 580},
+      {"item": "Chicken Tender Platter", "price": 850}
+    ],
+    "deals": ["Hot Spicy Meal: 2 CornDogs + Cheeto Fries - Rs. 1250", "Classic Combo: 6 CornDogs - Rs. 1799"]
+  },
+  {
+    "id": "res_035",
+    "name": "Bread n Chef",
+    "category": "Bakery & Cafe",
+    "location": "Phase 2, Hayatabad",
+    "menu": [
+      {"item": "Special Grilled Chicken Burger", "price": 850},
+      {"item": "Alfredo Pasta", "price": 1089},
+      {"item": "Finger Fish (6pcs)", "price": 1199},
+      {"item": "Buffalo Wings", "price": 689},
+      {"item": "Loaded Wrap", "price": 649},
+      {"item": "Super Nachos", "price": 550},
+      {"item": "Cappuccino Coffee", "price": 399},
+      {"item": "Vanilla Latte", "price": 449},
+      {"item": "Hot Chocolate", "price": 399},
+      {"item": "Bread Cheese Special Salad", "price": 589}
+    ],
+    "deals": ["Tea Time Deal: Mixed Tea + Pastry - Rs. 450"]
+  },
+  {
+    "id": "res_037",
+    "name": "Pizza Box",
+    "category": "Pizza / Fast Food",
+    "location": "University Road",
+    "menu": [
+      {"item": "Chicago Bold Fold (Large)", "price": 1650},
+      {"item": "Tarzan Tikka Pizza", "price": 1499},
+      {"item": "Calzone Pizza", "price": 899},
+      {"item": "Arabic Ranch Pizza", "price": 1550},
+      {"item": "Deep Dish Pizza", "price": 1750},
+      {"item": "Jaw Breaker Burger", "price": 850},
+      {"item": "Kraken Burger", "price": 950},
+      {"item": "Loaded Pizza Fries", "price": 450},
+      {"item": "Cheese Wings (10pcs)", "price": 1247},
+      {"item": "Kabab Wrap", "price": 782}
+    ],
+    "deals": ["Lovely Deal: Large Pizza + 4 Zingers + Wings - Rs. 3989", "Solo 2: Zinger + Fries + Drink - Rs. 999"]
+  },
+  {
+    "id": "res_038",
+    "name": "Sweet Cream",
+    "category": "Ice Cream / Desserts",
+    "location": "Phase 2, Hayatabad",
+    "menu": [
+      {"item": "Classic Fudge Sundae", "price": 650},
+      {"item": "Banana Split", "price": 850},
+      {"item": "Oreo Overload Scoop", "price": 350},
+      {"item": "Lotus Biscoff Shake", "price": 950},
+      {"item": "Chocolate Lava Cake", "price": 750},
+      {"item": "Nutella Waffle", "price": 800},
+      {"item": "Belgian Waffle with Gelato", "price": 1100},
+      {"item": "Iced Latte", "price": 550},
+      {"item": "Cookie Dough Skillet", "price": 950},
+      {"item": "Fruit Cocktail Bowl", "price": 700}
+    ],
+    "deals": ["BOGO on single scoops every Monday"]
+  },
+  {
+    "id": "res_039",
+    "name": "Hujra Restaurant",
+    "category": "Traditional / Desi",
+    "location": "Ring Road, Peshawar",
+    "menu": [
+      {"item": "Kabuli Pulao", "price": 850},
+      {"item": "Chicken Shinwari Karahi (Half kg)", "price": 1300},
+      {"item": "Hujra Special BBQ Fish", "price": 1500},
+      {"item": "Balochi Chicken Boti", "price": 1500},
+      {"item": "Reshmi Seekh Kabab", "price": 1500},
+      {"item": "Mutton Dum Pukht (Per kg)", "price": 3500},
+      {"item": "Chicken Makhni Handi", "price": 1700},
+      {"item": "Garlic Naan", "price": 95},
+      {"item": "Kalvungi Naan", "price": 95},
+      {"item": "Hujra Special Platter", "price": 7500}
+    ],
+    "deals": ["Rs. 250 Cashback on orders above Rs. 1000", "Complimentary Qehwa for large groups"]
+  },
+  {
+    "id": "res_040",
+    "name": "Kabir Restaurant",
+    "category": "Desi / Shinwari / Continental",
+    "location": "Ring Road, Peshawar",
+    "menu": [
+      {"item": "Shinwari Lunch Platter", "price": 1199},
+      {"item": "Pakistani Lunch Platter", "price": 1199},
+      {"item": "Butter Chicken Handi", "price": 1499},
+      {"item": "Dum Pukht with Kabuli Pulao", "price": 3899},
+      {"item": "Kabir's Special Platter", "price": 6999},
+      {"item": "Chapli Kabab with Naan", "price": 699},
+      {"item": "Chicken Adana Kabab", "price": 999},
+      {"item": "Matka Biryani", "price": 999},
+      {"item": "Beef Chili Dry with Rice", "price": 999},
+      {"item": "Pina Colada", "price": 399}
+    ],
+    "deals": ["Special Platters for 4-6 people starting from Rs. 3299"]
+  },
+  {
+    "id": "res_041",
+    "name": "Hong Kong Restaurant",
+    "category": "Chinese",
+    "location": "Ring Road, Peshawar",
+    "menu": [
+      {"item": "Hot and Sour Soup", "price": 400},
+      {"item": "Chicken Manchurian with Rice", "price": 550},
+      {"item": "Chicken Almonds", "price": 1300},
+      {"item": "Beef with Green Chilies Dry", "price": 1700},
+      {"item": "Special Butterfly Prawns", "price": 2200},
+      {"item": "Hong Kong Special Soup", "price": 1350},
+      {"item": "Chicken Chow Mein", "price": 1300},
+      {"item": "Kung Pao Chicken", "price": 1600},
+      {"item": "Egg Fried Rice", "price": 1000},
+      {"item": "Fried Honey Wings", "price": 1300}
+    ],
+    "deals": ["Combo deals for individuals starting at Rs. 467", "15% discount for Pandapro members"]
+  },
+  {
+    "id": "res_042",
+    "name": "Melting Spot",
+    "category": "Pizza / Fast Food",
+    "location": "Garrison Park, Cantt",
+    "menu": [
+      {"item": "Small Pan Pizza", "price": 550},
+      {"item": "Loaded Spud (Baked Potato)", "price": 750},
+      {"item": "Chicken Tikka Pizza (Large)", "price": 1450},
+      {"item": "Value Deal 1", "price": 850},
+      {"item": "Potato Skins", "price": 450},
+      {"item": "Melting Special Burger", "price": 650},
+      {"item": "Fettuccine Alfredo", "price": 950},
+      {"item": "Cheesy Breadsticks", "price": 400},
+      {"item": "Club Sandwich", "price": 600},
+      {"item": "Chocolate Brownie with Ice cream", "price": 450}
+    ],
+    "deals": ["Value Deal 1: Small Pizza + Potato Skins + Drink"]
+  },
+  {
+    "id": "res_043",
+    "name": "Ghwakhe Steakhouse",
+    "category": "Steaks / Turkish",
+    "location": "Board Bazar, Peshawar",
+    "menu": [
+      {"item": "Tenderloin Salt Bae Style", "price": 3199},
+      {"item": "Turkish Adana Kebab", "price": 1799},
+      {"item": "Persian Barg Kabab", "price": 1999},
+      {"item": "Philly Cheese Steak Burger", "price": 1399},
+      {"item": "Beef Smash Burger", "price": 899},
+      {"item": "Moroccan Chicken", "price": 1599},
+      {"item": "Parmesan Chicken Pasta", "price": 1599},
+      {"item": "Mutton Chops", "price": 1499},
+      {"item": "13 inch Beef Pizza", "price": 2199},
+      {"item": "Tomahawk Steak", "price": 2599}
+    ],
+    "deals": ["Premium dining experience, bank card discounts apply occasionally"]
+  },
+  {
+    "id": "res_044",
+    "name": "Roger Cafe",
+    "category": "Pizza / Fast Food",
+    "location": "Phase 6, Hayatabad",
+    "menu": [
+      {"item": "Chicken Fajita Pizza", "price": 500},
+      {"item": "Crown Crust Pizza", "price": 1200},
+      {"item": "Fettuccine Alfredo Pasta", "price": 500},
+      {"item": "Starter Platter", "price": 1000},
+      {"item": "2 Zinger Deal", "price": 972},
+      {"item": "Do It Deal (Large Pizza + Platter)", "price": 2450},
+      {"item": "Mexican Chicken Sandwich", "price": 650},
+      {"item": "Pizza Stacker", "price": 950},
+      {"item": "Bihari Roll", "price": 480},
+      {"item": "Train Pizza (8 persons)", "price": 3200}
+    ],
+    "deals": ["Double Up Deal: 2 Large Pizzas + Drink for Rs. 2900"]
+  },
+  {
+    "id": "res_045",
+    "name": "Layers Bakeshop",
+    "category": "Desserts",
+    "location": "Phase 2, Hayatabad",
+    "menu": [
+      {"item": "Lotus Three Milk Cake", "price": 3200},
+      {"item": "Ferrero Rocher Cake", "price": 3500},
+      {"item": "Belgian Malt Cake", "price": 2600},
+      {"item": "Nutella Cookie", "price": 320},
+      {"item": "Pistachio Cake", "price": 3400},
+      {"item": "Chocolate Dreamcake", "price": 3100},
+      {"item": "Red Velvet Cake", "price": 2300},
+      {"item": "German Fudge Cake", "price": 2100},
+      {"item": "Lotus Cookie", "price": 320},
+      {"item": "Milk Chocolate Cookie", "price": 320}
+    ],
+    "deals": ["Seasonal discounts on full cakes for events"]
+  }
+]
