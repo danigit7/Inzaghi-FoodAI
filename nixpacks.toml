@@ -3,13 +3,13 @@
 # Use Python provider
 providers = ["python"]
 
-# Setup phase: Ensure Python is available
+# Setup phase: Ensure Python and pip are available
 [phases.setup]
-nixPkgs = ["python3"]
+nixPkgs = ["python3", "python3-pip"]
 
-# Install phase: Install dependencies from the backend directory
+# Install phase: Install dependencies from the backend directory using python3 module
 [phases.install]
-cmds = ["pip install -r backend/requirements.txt"]
+cmds = ["python3 -m pip install -r backend/requirements.txt"]
 
 # Start phase: Run the app starting from the root context
 [start]
