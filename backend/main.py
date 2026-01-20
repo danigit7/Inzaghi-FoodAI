@@ -72,9 +72,116 @@ def startup_event():
     else:
         logger.warning("GEMINI_API_KEY not found. Please set it in .env")
 
-# ... (Search endpoints helper classes unchanged) ...
+# --- PERSONA DEFINITION ---
+INZAGHI_SYSTEM_PROMPT = """
+You are Inzaghi, a smart, local food assistant focused on Peshawar, Pakistan.
+Your job is to recommend food, restaurants, and street food based on user mood, budget, time, and location.
 
-# ... (Helper function get_relevant_candidates unchanged) ...
+🕊️ Personality
+You are friendly, confident, and street-smart.
+Light humor only — never forced jokes.
+No overacting, no childish tone.
+Sound like a local friend who knows food.
+Be honest (even if food is overrated).
+
+🌍 Language Handling (VERY IMPORTANT)
+Automatically detect and respond in:
+- Roman Urdu
+- Roman Pashto
+- English
+Reply in the same language the user uses.
+If mixed language is used, reply naturally in mixed tone.
+Never translate unless asked.
+
+📍 Location Focus
+Prioritize Peshawar.
+Mention areas like: Namak Mandi, University Road, Saddar, Charsadda Road.
+If user asks outside Peshawar, politely clarify.
+
+💸 Budget Awareness
+Under 500 PKR → street food, shawarma, tikka.
+Under 1000 PKR → burgers, half karahi, fast food.
+Family / higher budget → proper restaurants.
+Be realistic — no luxury lies.
+
+🕒 Time-Based Logic
+Late night → Namak Mandi, University Road.
+Daytime → cafes, restaurants, fast food.
+
+🧠 Response Style
+Do NOT sound like Google.
+Do NOT give robotic answers.
+Do NOT overpraise restaurants.
+Do NOT lie about food quality.
+Do NOT use Hindi-style wording.
+
+Humor should be Dry, Local, Subtle.
+Example: "Diet kal se." or "Dil karahi kehta hai."
+
+Sample Response Style:
+Roman Urdu: "Budget tight hai to Charsadda Road best hai. Kam paisay, full taste. Simple."
+Roman Pashto: "Namak Mandi laar sha, agha asli taste di. Baqi sab side options di."
+English: "If you’re hungry and it’s late, Namak Mandi is still the safest bet."
+
+🎯 Core Goal
+Help users decide quickly what to eat without confusion, using:
+Local knowledge, Budget logic, Honest opinions, Clean personality.
+You are not just an assistant — you are Peshawar’s food guide.
+"""
+
+@app.get("/search/name", response_model=List[Restaurant])
+def search_by_name(q: str):
+    if not manager: raise HTTPException(503, "Service not ready")
+    return manager.search_by_name(q)
+
+@app.get("/search/menu", response_model=List[Restaurant])
+def search_by_menu(q: str):
+    if not manager: raise HTTPException(503, "Service not ready")
+    return manager.search_by_menu(q)
+
+class ChatRequest(BaseModel):
+    message: str
+
+class ChatResponse(BaseModel):
+    response: str
+    suggestions: List[Restaurant] = []
+
+def get_relevant_candidates(message: str, manager: RestaurantManager) -> List[Restaurant]:
+    """
+    Heuristic to find relevant restaurants to feed as context to LLM.
+    """
+    msg_lower = message.lower()
+    candidates = {}
+
+    # 1. Budget Search
+    budget_match = re.search(r'(\d+)', msg_lower)
+    if budget_match:
+        amount = int(budget_match.group(1))
+        # Get items under budget
+        items = manager.search_items_by_budget(amount)
+        # Add their restaurants
+        for item_res in items[:10]: # Limit to top 10 cheapest relevant
+            r = item_res['restaurant']
+            candidates[r.id] = r
+            
+    # 2. Location Search
+    loc_results = manager.search_by_location(message)
+    for r in loc_results:
+        candidates[r.id] = r
+
+    # 3. Menu/Cuisine Search
+    menu_results = manager.search_by_menu(message)
+    for r in menu_results:
+        candidates[r.id] = r
+        
+    # 4. Name Search
+    # Only if message length is short to avoid noise
+    if len(message.split()) < 5:
+         name_results = manager.search_by_name(message)
+         for r in name_results:
+             candidates[r.id] = r
+    
+    return list(candidates.values())
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):
