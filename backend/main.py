@@ -31,9 +31,11 @@ logger = logging.getLogger(__name__)
 # Setup App
 app = FastAPI(title="Peshawar Restaurant Chatbot API")
 
-@app.get("/")
-def read_root():
-    return {"message": "Inzaghi FoodieAi Backend is Running!", "docs_url": "/docs"}
+# Serve Frontend Static Files
+app.mount("/assets", StaticFiles(directory="../frontend/dist/assets"), name="assets")
+
+# Catch-all route removed from here to place at the end 
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -274,4 +276,7 @@ async def chat(request: ChatRequest):
     return ChatResponse(response=response_text, suggestions=candidates)
 
 
-
+# Catch-all route to serve index.html for SPA (must be last)
+@app.get("/{full_path:path}")
+async def serve_react_app(full_path: str):
+    return FileResponse("../frontend/dist/index.html")
