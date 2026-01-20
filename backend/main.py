@@ -216,42 +216,39 @@ async def chat(request: ChatRequest):
         try:
             full_prompt = f"{INZAGHI_SYSTEM_PROMPT}\n\nContext Information:\nCurrent Time: {current_time}\n{context_text}\n\nUser Message: {user_msg}\n\nResponse:"
             
-            # List of models to try
-            models_to_try = [
-                "gemini-1.5-flash",
-                "gemini-1.5-flash-latest",
-                "gemini-pro",
-                "gemini-1.0-pro"
-            ]
-            
-            last_error = None
-            import time
-            
-            for model_name in models_to_try:
-                # Retry each model up to 2 times
-                for attempt in range(2):
-                    try:
-                        logger.info(f"Attempting to generate with model: {model_name} (Attempt {attempt+1})")
-                        model = genai.GenerativeModel(model_name)
-                        llm_response = model.generate_content(full_prompt)
-                        response_text = llm_response.text
-                        break # Success
-                    except Exception as e:
-                        error_str = str(e)
-                        last_error = e
-                        if "429" in error_str or "RESOURCE_EXHAUSTED" in error_str:
-                            logger.warning(f"Rate Limit hit on {model_name}. Waiting 5s...")
-                            time.sleep(5)
-                            continue
-                        
-                        logger.warning(f"Failed with model {model_name}: {e}")
-                        break # Move to next model
+            # Use the dynamically validated list
+            if not AVAILABLE_MODELS:
+                response_text = "Maaf ka! No AI models are currently available to me."
+            else:
+                last_error = None
+                import time
                 
-                if response_text:
-                    break # Success
-            
-            if not response_text and last_error:
-                raise last_error
+                # Try every validated model in order
+                for model_name in AVAILABLE_MODELS:
+                    # Retry each model up to 2 times
+                    for attempt in range(2):
+                        try:
+                            logger.info(f"Attempting to generate with model: {model_name} (Attempt {attempt+1})")
+                            model = genai.GenerativeModel(model_name)
+                            llm_response = model.generate_content(full_prompt)
+                            response_text = llm_response.text
+                            break # Success
+                        except Exception as e:
+                            error_str = str(e)
+                            last_error = e
+                            if "429" in error_str or "RESOURCE_EXHAUSTED" in error_str:
+                                logger.warning(f"Rate Limit hit on {model_name}. Waiting 5s...")
+                                time.sleep(5)
+                                continue
+                            
+                            logger.warning(f"Failed with model {model_name}: {e}")
+                            break # Move to next model
+                    
+                    if response_text:
+                        break # Success
+                
+                if not response_text and last_error:
+                    raise last_error
                 
         except Exception as e:
             logger.error(f"LLM Error: {e}")
