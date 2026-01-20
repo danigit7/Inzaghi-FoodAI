@@ -48,10 +48,22 @@ conversation_manager = ConversationManager()
 
 # Configure Gemini
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+AVAILABLE_MODELS = []
+PREFERRED_ORDER = [
+    "models/gemini-1.5-flash",
+    "models/gemini-1.5-flash-latest",
+    "models/gemini-1.5-flash-001",
+    "models/gemini-1.5-flash-002",
+    "models/gemini-1.5-pro",
+    "models/gemini-1.5-pro-latest",
+    "models/gemini-1.5-pro-001",
+    "models/gemini-pro",
+    "models/gemini-1.0-pro"
+]
 
 @app.on_event("startup")
 def startup_event():
-    global manager
+    global manager, AVAILABLE_MODELS
     
     # 1. Load Data
     data_path = os.path.join(os.path.dirname(__file__), "data", "restaurants_data.json")
@@ -62,11 +74,38 @@ def startup_event():
     else:
         logger.error(f"Data file not found at {data_path}")
 
-    # 2. Configure Gemini
+    # 2. Configure Gemini & Discover Models
     if GEMINI_API_KEY:
         try:
             genai.configure(api_key=GEMINI_API_KEY)
-            logger.info("Gemini SDK Configured.")
+            logger.info("Gemini SDK Configured. Discovering available models...")
+            
+            # DYNAMIC MODEL DISCOVERY
+            found_models = []
+            try:
+                for m in genai.list_models():
+                    if 'generateContent' in m.supported_generation_methods:
+                        found_models.append(m.name)
+                
+                logger.info(f"API Returned Models: {found_models}")
+                
+                # Sort found models based on our preference list
+                for pref in PREFERRED_ORDER:
+                    if pref in found_models:
+                        AVAILABLE_MODELS.append(pref)
+                
+                # Add fallbacks
+                for m in found_models:
+                    if m not in AVAILABLE_MODELS:
+                        AVAILABLE_MODELS.append(m)
+                        
+                logger.info(f"Final Validated Model List: {AVAILABLE_MODELS}")
+                
+            except Exception as e:
+                logger.error(f"Failed to list models: {e}")
+                # Fallback to defaults
+                AVAILABLE_MODELS.extend(["models/gemini-1.5-flash", "models/gemini-pro"])
+
         except Exception as e:
             logger.error(f"Error configuring Gemini SDK: {e}")
     else:
