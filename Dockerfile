@@ -1,32 +1,42 @@
-# Use official Python runtime as a parent image
-FROM python:3.11-slim
+# --- Stage 1: Build Frontend ---
+FROM node:20-alpine AS frontend-builder
 
-# Install system dependencies and Node.js
-RUN apt-get update && apt-get install -y curl gnupg && \
-    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
-    apt-get install -y nodejs && \
-    apt-get clean
+WORKDIR /frontend
 
-# Set the working directory in the container
+# Copy frontend dependency files
+COPY frontend/package.json ./
+
+# Install dependencies (use npm install to allow missing lockfile)
+RUN npm install
+
+# Copy the rest of the frontend source code
+COPY frontend/ .
+
+# Build the React app
+RUN npm run build
+
+# --- Stage 2: Setup Backend ---
+FROM python:3.12-slim
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y gcc && apt-get clean
+
 WORKDIR /app
 
-# Copy the frontend directory
-COPY frontend/ ./frontend/
+# Copy backend requirements
+COPY backend/requirements.txt .
 
-# Build the Frontend
-RUN cd frontend && npm install && npm run build
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the backend directory contents into the container at /app/backend
-COPY backend/ ./backend/
+# Copy backend code
+COPY backend/ .
 
-# Upgrade pip to ensure latest version
-RUN pip install --upgrade pip
+# Copy built frontend from Stage 1 to /app/static
+COPY --from=frontend-builder /frontend/dist ./static
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r backend/requirements.txt
+# Expose port
+EXPOSE 7860
 
-# Set environment variable for port (default to 7860 for Hugging Face Spaces)
-ENV PORT=7860
-
-# Run uvicorn when the container launches
-CMD ["sh", "-c", "cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT"]
+# Run uvicorn
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860"]
