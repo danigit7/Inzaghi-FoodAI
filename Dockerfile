@@ -1,20 +1,23 @@
 # Use official Python runtime as a parent image
-FROM python:3.11-slim
+FROM python:3.12-slim
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y gcc && apt-get clean
 
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the backend directory contents into the container at /app/backend
-COPY backend/ ./backend/
+# Copy requirements first to leverage Docker cache
+COPY backend/requirements.txt .
 
-# Upgrade pip to ensure latest version
-RUN pip install --upgrade pip
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r backend/requirements.txt
+# Copy the rest of the backend application
+COPY backend/ .
 
-# Set environment variable for port (default to 7860 for Hugging Face Spaces)
-ENV PORT=7860
+# Expose the port used by Hugging Face Spaces
+EXPOSE 7860
 
-# Run uvicorn when the container launches
-CMD ["sh", "-c", "cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT"]
+# Run uvicorn
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860"]
