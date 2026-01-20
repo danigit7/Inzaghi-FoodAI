@@ -129,41 +129,13 @@ def startup_event():
     if GEMINI_API_KEY:
         try:
             client = genai.Client(api_key=GEMINI_API_KEY)
+            logger.info("Gemini Client Initialized.")
             
-            # Auto-discover the best available model
-            found_model_name = None
-            try:
-                # client.models.list returns an iterator
-                for m in client.models.list():
-                    # Check support methods if available, otherwise assume yes or check name
-                    # The new SDK model object structure might differ, safe check:
-                    if 'generateContent' in (m.supported_generation_methods or []):
-                        if 'flash' in m.name:
-                            found_model_name = m.name
-                            break
-            except Exception:
-                pass # Fallback if list fails
+            # Prefer a specific stable version to avoid alias issues in some environments
+            GEMINI_MODEL_NAME = "gemini-1.5-flash" 
             
-            if not found_model_name:
-                 # Fallback search
-                 try:
-                    for m in client.models.list():
-                        if 'generateContent' in (m.supported_generation_methods or []):
-                            found_model_name = m.name
-                            break
-                 except Exception:
-                    pass
-
-            if found_model_name:
-                logger.info(f"Using Gemini Model: {found_model_name}")
-                GEMINI_MODEL_NAME = found_model_name
-            else:
-                logger.info("Using default Gemini Model: gemini-1.5-flash")
-                GEMINI_MODEL_NAME = "gemini-1.5-flash"
-                
         except Exception as e:
             logger.error(f"Error configuring Gemini Client: {e}")
-            # Client might be None if init failed, but we define global client above
     else:
         logger.warning("GEMINI_API_KEY not found. Please set it in .env")
 
@@ -258,12 +230,33 @@ async def chat(request: ChatRequest):
         try:
             full_prompt = f"{INZAGHI_SYSTEM_PROMPT}\n\nContext Information:\nCurrent Time: {current_time}\n{context_text}\n\nUser Message: {user_msg}\n\nResponse:"
             
-            # Generate
-            llm_response = client.models.generate_content(
-                model=GEMINI_MODEL_NAME,
-                contents=full_prompt
-            )
-            response_text = llm_response.text
+            # List of models to try in order of preference
+            models_to_try = [
+                GEMINI_MODEL_NAME,      # Default (gemini-1.5-flash)
+                "gemini-1.5-flash-002", # Specific version
+                "gemini-1.5-flash-001", # Older specific version
+                "gemini-1.5-pro",       # Fallback to Pro
+                "gemini-2.0-flash-exp"  # Experimental
+            ]
+            
+            last_error = None
+            
+            for model in models_to_try:
+                try:
+                    logger.info(f"Attempting to generate with model: {model}")
+                    llm_response = client.models.generate_content(
+                        model=model,
+                        contents=full_prompt
+                    )
+                    response_text = llm_response.text
+                    break # Success, exit loop
+                except Exception as e:
+                    last_error = e
+                    logger.warning(f"Failed with model {model}: {e}")
+                    # Continue to next model
+            
+            if not response_text and last_error:
+                raise last_error # Re-raise if all failed
         except Exception as e:
             logger.error(f"LLM Error: {e}")
             response_text = f"Maaf ka! I'm having trouble thinking right now. (Error: {str(e)})"
