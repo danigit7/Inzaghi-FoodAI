@@ -232,28 +232,42 @@ async def chat(request: ChatRequest):
             
             # List of models to try in order of preference
             models_to_try = [
-                GEMINI_MODEL_NAME,      # Default (gemini-1.5-flash)
-                "gemini-1.5-flash-002", # Specific version
-                "gemini-1.5-flash-001", # Older specific version
-                "gemini-1.5-pro",       # Fallback to Pro
-                "gemini-2.0-flash-exp"  # Experimental
+                GEMINI_MODEL_NAME,      # Default
+                "gemini-1.5-flash-002", # Newer
+                "gemini-1.5-flash-001", # Stable
             ]
             
             last_error = None
             
+            import time
+            
             for model in models_to_try:
-                try:
-                    logger.info(f"Attempting to generate with model: {model}")
-                    llm_response = client.models.generate_content(
-                        model=model,
-                        contents=full_prompt
-                    )
-                    response_text = llm_response.text
-                    break # Success, exit loop
-                except Exception as e:
-                    last_error = e
-                    logger.warning(f"Failed with model {model}: {e}")
-                    # Continue to next model
+                # Retry each model up to 2 times if we get a 429 (Rate Limit)
+                for attempt in range(2):
+                    try:
+                        logger.info(f"Attempting to generate with model: {model} (Attempt {attempt+1})")
+                        llm_response = client.models.generate_content(
+                            model=model,
+                            contents=full_prompt
+                        )
+                        response_text = llm_response.text
+                        break # Success, break inner loop
+                    except Exception as e:
+                        error_str = str(e)
+                        last_error = e
+                        
+                        # Check for Rate Limit (429) or Resource Exhausted
+                        if "429" in error_str or "RESOURCE_EXHAUSTED" in error_str:
+                            logger.warning(f"Rate Limit hit on {model}. Waiting 5s...")
+                            time.sleep(5)
+                            continue # Retry same model
+                        
+                        # If 404 or other error, break inner loop and move to next model
+                        logger.warning(f"Failed with model {model}: {e}")
+                        break
+                
+                if response_text:
+                    break # Success, break outer loop (model list)
             
             if not response_text and last_error:
                 raise last_error # Re-raise if all failed
