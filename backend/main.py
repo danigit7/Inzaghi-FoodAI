@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 app = FastAPI(title="Peshawar Restaurant Chatbot API")
 
 # Serve Frontend Static Files
-app.mount("/assets", StaticFiles(directory="../frontend/dist/assets"), name="assets")
+app.mount("/assets", StaticFiles(directory="static/assets"), name="assets")
 
 # Catch-all route removed from here to place at the end 
 
@@ -279,4 +279,4 @@ async def chat(request: ChatRequest):
 # Catch-all route to serve index.html for SPA (must be last)
 @app.get("/{full_path:path}")
 async def serve_react_app(full_path: str):
-    return FileResponse("../frontend/dist/index.html")
+    return FileResponse("static/index.html")
