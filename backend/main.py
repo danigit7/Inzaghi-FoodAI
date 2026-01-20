@@ -235,6 +235,8 @@ async def chat(request: ChatRequest):
                 GEMINI_MODEL_NAME,      # Default
                 "gemini-1.5-flash-002", # Newer
                 "gemini-1.5-flash-001", # Stable
+                "gemini-1.5-pro",       # Pro version
+                "gemini-pro",           # 1.0 Pro (Most stable fallback)
             ]
             
             last_error = None
