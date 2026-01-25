@@ -3,7 +3,13 @@ import { Send, User, Bot, MapPin, DollarSign, Star, Sparkles } from 'lucide-reac
 import logo from '../assets/logo_transparent.png';
 
 const ChatInterface = () => {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([
+    {
+      id: 'init-1', 
+      text: "Assalam-o-Alaikum! Inzaghi here. Peshawar ka food scene on hai? 🍔🍕", 
+      sender: 'bot'
+    }
+  ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isThinking, setIsThinking] = useState(false);

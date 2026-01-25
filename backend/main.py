@@ -50,6 +50,8 @@ conversation_manager = ConversationManager()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 AVAILABLE_MODELS = []
 PREFERRED_ORDER = [
+    "models/gemini-2.5-flash",
+    "models/gemini-2.5-flash-latest",
     "models/gemini-1.5-flash",
     "models/gemini-1.5-flash-latest",
     "models/gemini-1.5-flash-001",
@@ -210,6 +212,12 @@ async def chat(request: ChatRequest):
         raise HTTPException(status_code=503, detail="Service not ready")
     
     user_msg = request.message
+    
+    # Check for reset trigger
+    if user_msg.lower().strip() in ["hello", "hi", "hey", "salam", "assalam o alaikum"]:
+        conversation_manager.clear_history()
+        logger.info("Conversation history cleared by user greeting.")
+        
     conversation_manager.add_message("user", user_msg)
     
     # Get Time
