@@ -1,5 +1,4 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, HTTPException, Request, CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
 import os
@@ -28,6 +27,15 @@ logger = logging.getLogger(__name__)
 # Setup App
 app = FastAPI(title="Peshawar Restaurant Chatbot API")
 
+# Mount Static Assets (Absolute Path)
+static_dir = os.path.join(os.path.dirname(__file__), "static")
+assets_dir = os.path.join(static_dir, "assets")
+
+# Ensure directories exist
+os.makedirs(assets_dir, exist_ok=True)
+
+app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -35,6 +43,18 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Serve Logo from Root (for favicon etc)
+@app.get("/logo_transparent.png")
+async def serve_logo():
+    logo_path = os.path.join(static_dir, "logo_transparent.png")
+    if os.path.exists(logo_path):
+        return FileResponse(logo_path)
+    # Fallback to asset if root missing
+    asset_logo = os.path.join(assets_dir, "logo_transparent.png") 
+    if os.path.exists(asset_logo):
+        return FileResponse(asset_logo)
+    return HTTPException(404, "Logo not found")
 
 # Global State
 manager: Optional[RestaurantManager] = None
