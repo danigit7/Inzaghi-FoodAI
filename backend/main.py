@@ -1,39 +1,31 @@
-from fastapi import FastAPI, HTTPException, Request, CORSMiddleware
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List, Optional, Dict
 import os
 import logging
 import re
 import datetime
 from dotenv import load_dotenv
 
-# Models and Logic
 from models import Restaurant
 from dsa import RestaurantManager
 from data_loader import load_data
-from history import ConversationManager
+from history import SessionStore
 
-# Google Gemini
 import google.generativeai as genai
 
-# Load env
 load_dotenv()
 
-# Configure Logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Trigger Reload 2
-# Setup App
 app = FastAPI(title="Peshawar Restaurant Chatbot API")
 
-# Mount Static Assets (Absolute Path)
 static_dir = os.path.join(os.path.dirname(__file__), "static")
 assets_dir = os.path.join(static_dir, "assets")
-
-# Ensure directories exist
+sessions_dir = os.path.join(os.path.dirname(__file__), "data", "sessions")
 os.makedirs(assets_dir, exist_ok=True)
 
 app.add_middleware(
@@ -44,19 +36,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Global State
 manager: Optional[RestaurantManager] = None
-conversation_manager = ConversationManager()
-
-# Configure Gemini
+session_store: Optional[SessionStore] = None
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-model = None # Initialized in startup
+model = None
 
 @app.on_event("startup")
 def startup_event():
-    global manager, model
+    global manager, model, session_store
     
-    # 1. Load Data
     data_path = os.path.join(os.path.dirname(__file__), "data", "restaurants_data.json")
     if os.path.exists(data_path):
         restaurants = load_data(data_path)
@@ -65,11 +53,12 @@ def startup_event():
     else:
         logger.error(f"Data file not found at {data_path}")
 
-    # 2. Configure Gemini
+    session_store = SessionStore(sessions_dir, session_expiry_hours=24)
+    logger.info(f"SessionStore initialized with {len(session_store.sessions)} existing sessions.")
+
     if GEMINI_API_KEY:
         genai.configure(api_key=GEMINI_API_KEY)
         try:
-            # Auto-discover the best available model
             found_model_name = None
             for m in genai.list_models():
                 if 'generateContent' in m.supported_generation_methods:
@@ -78,8 +67,7 @@ def startup_event():
                         break
             
             if not found_model_name:
-                 # Fallback to any generative model
-                 for m in genai.list_models():
+                for m in genai.list_models():
                     if 'generateContent' in m.supported_generation_methods:
                         found_model_name = m.name
                         break
@@ -91,7 +79,6 @@ def startup_event():
                 logger.error("No suitable Gemini model found.")
         except Exception as e:
             logger.error(f"Error configuring Gemini: {e}")
-            # Last resort fallback
             model = genai.GenerativeModel('gemini-1.5-flash')
     else:
         logger.warning("GEMINI_API_KEY not found. Please set it in .env")
@@ -109,69 +96,76 @@ def search_by_menu(q: str):
 
 class ChatRequest(BaseModel):
     message: str
+    session_id: Optional[str] = None
 
 class ChatResponse(BaseModel):
     response: str
     suggestions: List[Restaurant] = []
+    session_id: str
+
+class SessionResponse(BaseModel):
+    session_id: str
+
+class HistoryResponse(BaseModel):
+    session_id: str
+    history: List[Dict[str, str]]
+
+@app.post("/session/new", response_model=SessionResponse)
+def create_new_session():
+    if not session_store:
+        raise HTTPException(status_code=503, detail="Service not ready")
+    new_id = session_store.create_session()
+    return SessionResponse(session_id=new_id)
+
+@app.get("/session/{session_id}/history", response_model=HistoryResponse)
+def get_session_history(session_id: str):
+    if not session_store:
+        raise HTTPException(status_code=503, detail="Service not ready")
+    if not session_store.session_exists(session_id):
+        raise HTTPException(status_code=404, detail="Session not found")
+    history = session_store.get_history(session_id)
+    return HistoryResponse(session_id=session_id, history=history)
 
 def get_relevant_candidates(message: str, manager: RestaurantManager) -> List[Restaurant]:
-    """
-    Heuristic to find relevant restaurants to feed as context to LLM.
-    """
     msg_lower = message.lower()
     candidates = {}
 
-    # 1. Budget Search
     budget_match = re.search(r'(\d+)', msg_lower)
     if budget_match:
         amount = int(budget_match.group(1))
-        # Get items under budget
         items = manager.search_items_by_budget(amount)
-        # Add their restaurants
-        for item_res in items[:10]: # Limit to top 10 cheapest relevant
+        for item_res in items[:10]:
             r = item_res['restaurant']
             candidates[r.id] = r
             
-    # 2. Location Search
     loc_results = manager.search_by_location(message)
     for r in loc_results:
         candidates[r.id] = r
 
-    # 3. Menu/Cuisine Search
     menu_results = manager.search_by_menu(message)
     for r in menu_results:
         candidates[r.id] = r
         
-    # 4. Name Search
-    # Only if message length is short to avoid noise
     if len(message.split()) < 5:
-         name_results = manager.search_by_name(message)
-         for r in name_results:
-             candidates[r.id] = r
+        name_results = manager.search_by_name(message)
+        for r in name_results:
+            candidates[r.id] = r
     
     return list(candidates.values())
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):
-    if not manager:
+    if not manager or not session_store:
         raise HTTPException(status_code=503, detail="Service not ready")
     
+    session_id = session_store.get_or_create_session(request.session_id)
     user_msg = request.message
-    conversation_manager.add_message("user", user_msg)
+    session_store.add_message(session_id, "user", user_msg)
     
-    # Get Time
     current_time = datetime.datetime.now().strftime("%I:%M %p")
-    
-    # 1. Identify Context Candidates (RAG)
     candidates = get_relevant_candidates(user_msg, manager)
-    
-    # If no candidates found used heuristics, but user message is very short, maybe it's "hi" or "hello"
-    # We still pass empty context
-    
-    # Limit candidates
     candidates = candidates[:15]
     
-    # Format Context for LLM
     context_text = "Here is the list of available restaurants in our database matching the query:\n"
     if candidates:
         for r in candidates:
@@ -180,14 +174,11 @@ async def chat(request: ChatRequest):
     else:
         context_text += "No specific restaurants found directly matching keywords in the database. Rely on your internal knowledge or ask clarifying questions.\n"
 
-    # 2. Generate Response
     response_text = ""
     
     if model:
         try:
             full_prompt = f"{INZAGHI_SYSTEM_PROMPT}\n\nContext Information:\nCurrent Time: {current_time}\n{context_text}\n\nUser Message: {user_msg}\n\nResponse:"
-            
-            # Generate
             llm_response = model.generate_content(full_prompt)
             response_text = llm_response.text
         except Exception as e:
@@ -196,12 +187,9 @@ async def chat(request: ChatRequest):
     else:
         response_text = "Gemini API Key is missing! I need it to wake up."
 
-    # 3. Save Context & History
-    conversation_manager.add_message("bot", response_text)
+    session_store.add_message(session_id, "bot", response_text)
     
-    return ChatResponse(response=response_text, suggestions=candidates)
+    return ChatResponse(response=response_text, suggestions=candidates, session_id=session_id)
 
-# Mount the static directory to root "/"
-# This serves index.html and all other static files
-# Placed at the end to ensure API routes take precedence
 app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
+

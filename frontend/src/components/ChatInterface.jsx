@@ -7,6 +7,7 @@ const ChatInterface = () => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
+  const [sessionId, setSessionId] = useState(null);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -34,10 +35,14 @@ const ChatInterface = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ message: userMsg.text }),
+          body: JSON.stringify({ message: userMsg.text, session_id: sessionId }),
         });
 
         const data = await response.json();
+        
+        if (data.session_id) {
+          setSessionId(data.session_id);
+        }
         
         const botMsg = { 
           id: Date.now() + 1, 
