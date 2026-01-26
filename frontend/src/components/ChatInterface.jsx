@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, User, Bot, MapPin, DollarSign, Star, Sparkles } from 'lucide-react';
-import logo from '../assets/logo_transparent.png';
+
 
 const ChatInterface = () => {
   const [messages, setMessages] = useState([]);
@@ -73,7 +73,7 @@ const ChatInterface = () => {
           <div className="relative">
             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-violet-600 p-[2px] animate-pulse-glow">
               <div className="w-full h-full rounded-full bg-[#1e2130] flex items-center justify-center overflow-hidden">
-                <img src={logo} alt="Inzaghi" className="w-full h-full object-cover" />
+                <img src="/INZAGHI.png" alt="Inzaghi" className="w-full h-full object-cover" />
               </div>
             </div>
             <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-[#1e2130]"></div>
@@ -97,7 +97,7 @@ const ChatInterface = () => {
         {messages.length === 0 && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
             <img 
-              src={logo} 
+              src="/INZAGHI.png" 
               alt="Inzaghi Watermark" 
               className="w-48 h-48 md:w-64 md:h-64 object-contain opacity-[0.03] filter grayscale invert brightness-200" 
             />
@@ -116,7 +116,7 @@ const ChatInterface = () => {
                 {msg.sender === 'user' ? (
                   <User size={14} className="text-white" />
                 ) : (
-                  <img src={logo} alt="Bot" className="w-full h-full object-cover" />
+                  <img src="/INZAGHI.png" alt="Bot" className="w-full h-full object-cover" />
                 )}
               </div>
               
@@ -174,7 +174,7 @@ const ChatInterface = () => {
           <div className="flex justify-start animate-slide-up">
             <div className="flex flex-row gap-3">
               <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1 overflow-hidden">
-                <img src={logo} alt="Thinking..." className="w-full h-full object-cover" />
+                <img src="/INZAGHI.png" alt="Thinking..." className="w-full h-full object-cover" />
               </div>
               <div className="bg-[#1e2130] p-4 rounded-2xl rounded-tl-none border border-[rgba(76,139,245,0.2)] flex items-center gap-3">
                 <div className="gemini-loader">
