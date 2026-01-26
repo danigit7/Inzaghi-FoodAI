@@ -1,4 +1,6 @@
 from fastapi import FastAPI, HTTPException, Request, CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from typing import List, Optional
 import os
@@ -34,8 +36,6 @@ assets_dir = os.path.join(static_dir, "assets")
 # Ensure directories exist
 os.makedirs(assets_dir, exist_ok=True)
 
-app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -44,18 +44,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Serve Logo from Root (for favicon etc)
+# Serve Logo from Root
 @app.get("/INZAGHI.png")
 async def serve_logo():
     # Check static root first
     logo_path = os.path.join(static_dir, "INZAGHI.png")
     if os.path.exists(logo_path):
         return FileResponse(logo_path)
-    # Fallback to asset directory
+    # Check assets
     asset_logo = os.path.join(assets_dir, "INZAGHI.png") 
     if os.path.exists(asset_logo):
         return FileResponse(asset_logo)
+    # Fallback to public/INZAGHI.png if local dev (optional heuristic)
     return HTTPException(404, "Logo not found")
+
+# Mount the static directory to root "/"
+# This serves index.html and all other static files
+app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
 
 # Global State
 manager: Optional[RestaurantManager] = None
