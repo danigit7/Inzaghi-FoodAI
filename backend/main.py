@@ -44,24 +44,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Serve Logo from Root
-@app.get("/INZAGHI.png")
-async def serve_logo():
-    # Check static root first
-    logo_path = os.path.join(static_dir, "INZAGHI.png")
-    if os.path.exists(logo_path):
-        return FileResponse(logo_path)
-    # Check assets
-    asset_logo = os.path.join(assets_dir, "INZAGHI.png") 
-    if os.path.exists(asset_logo):
-        return FileResponse(asset_logo)
-    # Fallback to public/INZAGHI.png if local dev (optional heuristic)
-    return HTTPException(404, "Logo not found")
-
-# Mount the static directory to root "/"
-# This serves index.html and all other static files
-app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
-
 # Global State
 manager: Optional[RestaurantManager] = None
 conversation_manager = ConversationManager()
@@ -218,3 +200,8 @@ async def chat(request: ChatRequest):
     conversation_manager.add_message("bot", response_text)
     
     return ChatResponse(response=response_text, suggestions=candidates)
+
+# Mount the static directory to root "/"
+# This serves index.html and all other static files
+# Placed at the end to ensure API routes take precedence
+app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
