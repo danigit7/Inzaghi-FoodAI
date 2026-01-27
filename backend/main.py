@@ -256,59 +256,59 @@ async def chat(request: ChatRequest):
             response_text = llm_response.text
         except Exception as e:
             if "429" in str(e):
-                logger.warning(f"Quota exceeded for primary model ({model.model_name if hasattr(model, 'model_name') else 'Unknown'}). Switching to fallback...")
+                logger.warning("Quota exceeded. Switching to fallback...")
                 try:
-                    # Current model name
-                    current_name = model.model_name if hasattr(model, 'model_name') else ""
-                    
-                    # Candidates to try: valid_models found at startup + hardcoded known working models
-                    candidates = list(valid_models)
+                    # Safely get current model name
+                    current_name = ""
+                    try:
+                        if model and hasattr(model, 'model_name'):
+                            current_name = model.model_name
+                    except:
+                        pass
+
+                    # Candidates to try
+                    candidates = list(valid_models) if 'valid_models' in globals() else []
                     hardcoded_backups = [
                         "models/gemini-1.5-flash", 
-                        "models/gemini-1.5-flash-001", 
+                        "models/gemini-1.5-flash-001",
                         "models/gemini-1.5-flash-002",
-                        "models/gemini-pro", 
-                        "models/gemini-1.0-pro"
+                        "models/gemini-1.5-flash-8b",
+                        "models/gemini-2.0-flash-exp",
+                        "models/gemini-pro"
                     ]
                     for m in hardcoded_backups:
                         if m not in candidates:
                             candidates.append(m)
                     
-                    logger.info(f"Fallback candidates: {candidates}")
-
                     fallback_model = None
                     llm_response = None
                     
-                    # Try candidates one by one
+                    # Try candidates
                     for name in candidates:
-                        # Skip if it's the one that just failed
-                        if name == current_name: 
-                            continue
-                            
-                        # Skip if it's "flash" matches the one that failed (heuristic)
-                        if "flash" in current_name and "flash" in name and "8b" not in name:
-                             # Try anyway if list is short, but prefer different class
-                             pass
-
-                        logger.info(f"Attempting fallback model: {name}")
+                        if name == current_name: continue
+                        
+                        logger.info(f"Attempting fallback: {name}")
                         try:
                             temp_model = genai.GenerativeModel(name)
+                            # Short timeout for fallback to avoid long hangs? 
+                            # No, let's just await.
                             llm_response = await temp_model.generate_content_async(full_prompt)
                             if llm_response and llm_response.text:
                                 fallback_model = temp_model
                                 response_text = llm_response.text
-                                logger.info(f"Fallback successful with: {name}")
-                                break # Success!
+                                logger.info(f"Fallback success: {name}")
+                                break
                         except Exception as inner_e:
-                            logger.warning(f"Fallback candidate {name} failed: {inner_e}")
+                            logger.warning(f"Fallback {name} failed: {inner_e}")
                             continue
                     
                     if not fallback_model:
-                        raise Exception("All fallback candidates failed.")
+                         # Final ditch effort: simple response
+                         response_text = "Maaf ka! Too many requests (Quota Exceeded) and backup brains are asleep. Please wait 1 minute."
 
-                except Exception as fallback_error:
-                    logger.error(f"Critical Fallback Failure: {fallback_error}")
-                    response_text = "Maaf ka! Too many requests (Quota Exceeded) and backup brains are asleep. Please wait 1 minute."
+                except Exception as fallback_crash:
+                    logger.error(f"Critical Fallback Logic Failure: {fallback_crash}")
+                    response_text = "Maaf ka! System overloaded. Please try again soon."
             else:
                 logger.error(f"LLM Error: {e}")
                 response_text = f"Maaf ka! I'm having trouble thinking right now. (Error: {str(e)})"
