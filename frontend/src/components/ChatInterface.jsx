@@ -89,7 +89,7 @@ const ChatInterface = () => {
             </h1>
             <p className="text-xs text-gray-400 flex items-center gap-1 font-body">
               <Sparkles size={10} className="text-yellow-400" />
-              Peshawar Foodie AI
+              Peshawar Foodie AI <span className="text-[9px] opacity-50 ml-1">v1.1</span>
             </p>
           </div>
         </div>
