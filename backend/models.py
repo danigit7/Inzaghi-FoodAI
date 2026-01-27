@@ -11,8 +11,7 @@ class Restaurant(BaseModel):
     category: Optional[str] = None
     menu: List[MenuItem]
     deals: List[str] = []
-    
-    # Optional fields for backward compatibility or computed values
+
     cuisine: List[str] = []
     rating: Optional[float] = None
     budget: Optional[str] = None
