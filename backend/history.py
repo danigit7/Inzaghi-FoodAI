@@ -15,7 +15,16 @@ class SessionStore:
         self.sessions: Dict[str, dict] = {}
         self.lock = threading.Lock()
         
-        os.makedirs(storage_dir, exist_ok=True)
+        try:
+            os.makedirs(storage_dir, exist_ok=True)
+        except PermissionError:
+            # Fallback to simpler path or handle gracefully
+            # e.g. /tmp/sessions if available
+            import tempfile
+            self.storage_dir = os.path.join(tempfile.gettempdir(), "sessions")
+            os.makedirs(self.storage_dir, exist_ok=True)
+        except Exception:
+            pass
         self._load_sessions()
         self._cleanup_expired()
     

@@ -45,43 +45,60 @@ model = None
 def startup_event():
     global manager, model, session_store
     
-    data_path = os.path.join(os.path.dirname(__file__), "data", "restaurants_data.json")
-    if os.path.exists(data_path):
-        restaurants = load_data(data_path)
-        manager = RestaurantManager(restaurants)
-        logger.info(f"Loaded {len(restaurants)} restaurants.")
-    else:
-        logger.error(f"Data file not found at {data_path}")
+    try:
+        data_path = os.path.join(os.path.dirname(__file__), "data", "restaurants_data.json")
+        if os.path.exists(data_path):
+            try:
+                restaurants = load_data(data_path)
+                manager = RestaurantManager(restaurants)
+                logger.info(f"Loaded {len(restaurants)} restaurants.")
+            except Exception as e:
+                logger.error(f"Error loading restaurant data: {e}")
+                # Don't crash, just let manager be None or handle gracefully
+        else:
+            logger.error(f"Data file not found at {data_path}")
 
-    session_store = SessionStore(sessions_dir, session_expiry_hours=24)
-    logger.info(f"SessionStore initialized with {len(session_store.sessions)} existing sessions.")
-
-    if GEMINI_API_KEY:
-        genai.configure(api_key=GEMINI_API_KEY)
         try:
-            found_model_name = None
-            for m in genai.list_models():
-                if 'generateContent' in m.supported_generation_methods:
-                    if 'flash' in m.name:
-                        found_model_name = m.name
-                        break
-            
-            if not found_model_name:
+            session_store = SessionStore(sessions_dir, session_expiry_hours=24)
+            logger.info(f"SessionStore initialized with {len(session_store.sessions)} existing sessions.")
+        except Exception as e:
+            logger.error(f"Error initializing SessionStore: {e}")
+            # Fallback to in-memory only or tmp dir?
+            # For now, let's log it.
+
+        if GEMINI_API_KEY:
+            genai.configure(api_key=GEMINI_API_KEY)
+            try:
+                found_model_name = None
                 for m in genai.list_models():
                     if 'generateContent' in m.supported_generation_methods:
-                        found_model_name = m.name
-                        break
+                        if 'flash' in m.name:
+                            found_model_name = m.name
+                            break
+                
+                if not found_model_name:
+                    for m in genai.list_models():
+                        if 'generateContent' in m.supported_generation_methods:
+                            found_model_name = m.name
+                            break
+                
+                if found_model_name:
+                    logger.info(f"Using Gemini Model: {found_model_name}")
+                    model = genai.GenerativeModel(found_model_name)
+                else:
+                    logger.error("No suitable Gemini model found.")
+            except Exception as e:
+                logger.error(f"Error configuring Gemini: {e}")
+                model = genai.GenerativeModel('gemini-1.5-flash')
+        else:
+            logger.warning("GEMINI_API_KEY not found. Please set it in .env")
             
-            if found_model_name:
-                logger.info(f"Using Gemini Model: {found_model_name}")
-                model = genai.GenerativeModel(found_model_name)
-            else:
-                logger.error("No suitable Gemini model found.")
-        except Exception as e:
-            logger.error(f"Error configuring Gemini: {e}")
-            model = genai.GenerativeModel('gemini-1.5-flash')
-    else:
-        logger.warning("GEMINI_API_KEY not found. Please set it in .env")
+    except Exception as e:
+        logger.critical(f"Critical error during startup: {e}")
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok", "manager_loaded": manager is not None, "model_loaded": model is not None}
 
 
 @app.get("/search/name", response_model=List[Restaurant])

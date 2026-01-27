@@ -16,6 +16,7 @@ RUN pip install --no-cache-dir -r ./backend/requirements.txt
 
 # Copy Backend Code
 COPY backend/ ./backend/
+RUN mkdir -p backend/data/sessions && chmod -R 777 backend/data/sessions
 
 # Copy Built Frontend Assets from Stage 1
 # Vite defaults output to dist, but your config said ../backend/static
