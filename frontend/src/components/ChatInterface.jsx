@@ -30,7 +30,7 @@ const ChatInterface = () => {
     // Simulate thinking delay (2-3 seconds)
     setTimeout(async () => {
       try {
-        const response = await fetch('http://localhost:8000/chat', {
+        const response = await fetch('/chat', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
