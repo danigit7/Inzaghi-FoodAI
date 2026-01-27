@@ -285,32 +285,42 @@ async def chat(request: ChatRequest):
                     except:
                         pass
 
+                    import time
+                    
                     # Candidates to try
-                    candidates = list(valid_models) if 'valid_models' in globals() else []
-                    hardcoded_backups = [
-                        "models/gemini-1.5-flash", 
+                    # STRATEGY: Prioritize stable 1.5-flash first, then others.
+                    # 1.5 Flash is usually the most generous free tier.
+                    candidates = [
+                        "models/gemini-1.5-flash",
                         "models/gemini-1.5-flash-001",
-                        "models/gemini-1.5-flash-002",
-                        "models/gemini-1.5-flash-8b",
-                        "models/gemini-2.0-flash-exp",
-                        "models/gemini-pro"
+                        "models/gemini-1.5-flash-002"
                     ]
-                    for m in hardcoded_backups:
+                    
+                    # Add discovered "flash" models if not already in list
+                    discovered = list(valid_models) if 'valid_models' in globals() else []
+                    for m in discovered:
+                        if "flash" in m and m not in candidates:
+                            candidates.append(m)
+                            
+                    # Add remaining discovered (non-flash)
+                    for m in discovered:
                         if m not in candidates:
                             candidates.append(m)
-                    
+
                     fallback_model = None
                     llm_response = None
+                    attempts = 0
+                    max_attempts = 3
                     
                     # Try candidates
                     for name in candidates:
+                        if attempts >= max_attempts: break
                         if name == current_name: continue
                         
                         logger.info(f"Attempting fallback: {name}")
                         try:
+                            time.sleep(1) # Be polite to the API
                             temp_model = genai.GenerativeModel(name)
-                            # Short timeout for fallback to avoid long hangs? 
-                            # No, let's just await.
                             llm_response = await temp_model.generate_content_async(full_prompt)
                             if llm_response and llm_response.text:
                                 fallback_model = temp_model
@@ -319,6 +329,7 @@ async def chat(request: ChatRequest):
                                 break
                         except Exception as inner_e:
                             logger.warning(f"Fallback {name} failed: {inner_e}")
+                            attempts += 1
                             continue
                     
                     if not fallback_model:
