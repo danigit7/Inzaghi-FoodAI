@@ -108,7 +108,6 @@ def startup_event():
                 logger.info(f"Loaded {len(restaurants)} restaurants.")
             except Exception as e:
                 logger.error(f"Error loading restaurant data: {e}")
-                # Don't crash, just let manager be None or handle gracefully
         else:
             logger.error(f"Data file not found at {data_path}")
 
@@ -116,9 +115,7 @@ def startup_event():
             session_store = SessionStore(sessions_dir, session_expiry_hours=24)
             logger.info(f"SessionStore initialized with {len(session_store.sessions)} existing sessions.")
         except Exception as e:
-            logger.error(f"Error initializing SessionStore: {e}")
-            # Fallback to in-memory only or tmp dir?
-            # For now, let's log it.
+                logger.error(f"Error initializing SessionStore: {e}")
 
         if GEMINI_API_KEY:
             genai.configure(api_key=GEMINI_API_KEY)
