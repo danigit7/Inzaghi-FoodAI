@@ -285,7 +285,7 @@ async def chat(request: ChatRequest):
                     except:
                         pass
 
-                    import time
+                    import asyncio
                     
                     # Candidates to try
                     # STRATEGY: Prioritize stable 1.5-flash first, then others.
@@ -319,7 +319,7 @@ async def chat(request: ChatRequest):
                         
                         logger.info(f"Attempting fallback: {name}")
                         try:
-                            time.sleep(1) # Be polite to the API
+                            await asyncio.sleep(1)
                             temp_model = genai.GenerativeModel(name)
                             llm_response = await temp_model.generate_content_async(full_prompt)
                             if llm_response and llm_response.text:
