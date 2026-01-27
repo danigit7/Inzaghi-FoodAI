@@ -290,7 +290,7 @@ async def chat(request: ChatRequest):
                     # Candidates to try
                     # STRATEGY: Prioritize stable 1.5-flash first, then others.
                     # 1.5 Flash is usually the most generous free tier.
-                    candidates = [
+                    model_candidates = [
                         "models/gemini-1.5-flash",
                         "models/gemini-1.5-flash-001",
                         "models/gemini-1.5-flash-002"
@@ -299,13 +299,13 @@ async def chat(request: ChatRequest):
                     # Add discovered "flash" models if not already in list
                     discovered = list(valid_models) if 'valid_models' in globals() else []
                     for m in discovered:
-                        if "flash" in m and m not in candidates:
-                            candidates.append(m)
+                        if "flash" in m and m not in model_candidates:
+                            model_candidates.append(m)
                             
                     # Add remaining discovered (non-flash)
                     for m in discovered:
-                        if m not in candidates:
-                            candidates.append(m)
+                        if m not in model_candidates:
+                            model_candidates.append(m)
 
                     fallback_model = None
                     llm_response = None
@@ -313,7 +313,7 @@ async def chat(request: ChatRequest):
                     max_attempts = 3
                     
                     # Try candidates
-                    for name in candidates:
+                    for name in model_candidates:
                         if attempts >= max_attempts: break
                         if name == current_name: continue
                         
