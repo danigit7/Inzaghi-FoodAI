@@ -59,8 +59,9 @@ Instructions:
 - Be concise but helpful.
 
 Formatting:
-- Use bullet points for lists.
-- Bold restaurant names.
+- Use '•' (unicode bullet) for all list items. Do NOT use '*'.
+- Use plain text, avoid markdown formatting like **bold** or *italics*.
+- Capitalize restaurant names for emphasis instead of bolding.
 """
 
 @app.on_event("startup")
