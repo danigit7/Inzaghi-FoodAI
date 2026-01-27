@@ -250,8 +250,18 @@ async def chat(request: ChatRequest):
             llm_response = await model.generate_content_async(full_prompt)
             response_text = llm_response.text
         except Exception as e:
-            logger.error(f"LLM Error: {e}")
-            response_text = f"Maaf ka! I'm having trouble thinking right now. (Error: {str(e)})"
+            if "429" in str(e):
+                logger.warning("Quota exceeded for primary model. Switching to fallback...")
+                try:
+                    fallback_model = genai.GenerativeModel('gemini-1.5-flash')
+                    llm_response = await fallback_model.generate_content_async(full_prompt)
+                    response_text = llm_response.text
+                except Exception as fallback_error:
+                    logger.error(f"Fallback Error: {fallback_error}")
+                    response_text = "Maaf ka! Too many requests (Quota Exceeded). Please try again in a minute."
+            else:
+                logger.error(f"LLM Error: {e}")
+                response_text = f"Maaf ka! I'm having trouble thinking right now. (Error: {str(e)})"
     else:
         response_text = "Gemini API Key is missing! I need it to wake up."
 
