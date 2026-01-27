@@ -40,6 +40,7 @@ manager: Optional[RestaurantManager] = None
 session_store: Optional[SessionStore] = None
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 model = None
+valid_models = []
 
 INZAGHI_SYSTEM_PROMPT = """
 You are Inzaghi, a friendly, local "Peshawari" food enthusiast and AI guide.
@@ -97,7 +98,7 @@ Formatting:
 
 @app.on_event("startup")
 def startup_event():
-    global manager, model, session_store
+    global manager, model, session_store, valid_models
     
     try:
         data_path = os.path.join(os.path.dirname(__file__), "data", "restaurants_data.json")
@@ -120,18 +121,22 @@ def startup_event():
         if GEMINI_API_KEY:
             genai.configure(api_key=GEMINI_API_KEY)
             try:
-                found_model_name = None
+                # Populate valid models list
                 for m in genai.list_models():
                     if 'generateContent' in m.supported_generation_methods:
-                        if 'flash' in m.name:
-                            found_model_name = m.name
-                            break
+                        valid_models.append(m.name)
                 
-                if not found_model_name:
-                    for m in genai.list_models():
-                        if 'generateContent' in m.supported_generation_methods:
-                            found_model_name = m.name
-                            break
+                logger.info(f"Available Gemini Models: {valid_models}")
+
+                # Select primary model (prefer flash)
+                found_model_name = None
+                for name in valid_models:
+                    if 'flash' in name:
+                        found_model_name = name
+                        break
+                
+                if not found_model_name and valid_models:
+                    found_model_name = valid_models[0]
                 
                 if found_model_name:
                     logger.info(f"Using Gemini Model: {found_model_name}")
@@ -253,9 +258,31 @@ async def chat(request: ChatRequest):
             if "429" in str(e):
                 logger.warning("Quota exceeded for primary model. Switching to fallback...")
                 try:
-                    fallback_model = genai.GenerativeModel('gemini-1.5-flash')
-                    llm_response = await fallback_model.generate_content_async(full_prompt)
-                    response_text = llm_response.text
+                    # Find a fallback model that is DIFFERENT from the current one
+                    current_name = model.model_name if hasattr(model, 'model_name') else ""
+                    fallback_name = None
+                    
+                    # Prefer flash models first
+                    for name in valid_models:
+                        if name != current_name and 'flash' in name:
+                            fallback_name = name
+                            break
+                    
+                    # If no other flash model, take any other valid model
+                    if not fallback_name:
+                        for name in valid_models:
+                            if name != current_name:
+                                fallback_name = name
+                                break
+                    
+                    if fallback_name:
+                        logger.info(f"Using Fallback Model: {fallback_name}")
+                        fallback_model = genai.GenerativeModel(fallback_name)
+                        llm_response = await fallback_model.generate_content_async(full_prompt)
+                        response_text = llm_response.text
+                    else:
+                        raise Exception("No available fallback models found.")
+
                 except Exception as fallback_error:
                     logger.error(f"Fallback Error: {fallback_error}")
                     response_text = "Maaf ka! Too many requests (Quota Exceeded). Please try again in a minute."
