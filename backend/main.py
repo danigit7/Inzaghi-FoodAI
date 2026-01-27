@@ -287,22 +287,17 @@ async def chat(request: ChatRequest):
 
                     import asyncio
                     
-                    # Candidates to try
-                    # STRATEGY: Prioritize stable 1.5-flash first, then others.
-                    # 1.5 Flash is usually the most generous free tier.
-                    model_candidates = [
-                        "models/gemini-1.5-flash",
-                        "models/gemini-1.5-flash-001",
-                        "models/gemini-1.5-flash-002"
-                    ]
-                    
-                    # Add discovered "flash" models if not already in list
+                    # ONLY use models that actually exist in the API (from discovery)
                     discovered = list(valid_models) if 'valid_models' in globals() else []
+                    
+                    # Prioritize "lite" and smaller models (usually have separate/higher limits)
+                    model_candidates = []
                     for m in discovered:
-                        if "flash" in m and m not in model_candidates:
+                        if "lite" in m:
                             model_candidates.append(m)
-                            
-                    # Add remaining discovered (non-flash)
+                    for m in discovered:
+                        if "2.0" in m and m not in model_candidates:
+                            model_candidates.append(m)
                     for m in discovered:
                         if m not in model_candidates:
                             model_candidates.append(m)
