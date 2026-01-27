@@ -39,6 +39,25 @@ app.add_middleware(
 manager: Optional[RestaurantManager] = None
 session_store: Optional[SessionStore] = None
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request, exc):
+    logger.error(f"Global Exception: {exc}", exc_info=True)
+    return JSONResponse(
+        status_code=500,
+        content={"message": f"Internal Server Error: {str(exc)}"},
+    )
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    logger.error(f"Validation Error: {exc}", exc_info=True)
+    return JSONResponse(
+        status_code=422,
+        content={"message": f"Validation Error: {str(exc)}"},
+    )
+
 model = None
 valid_models = []
 
