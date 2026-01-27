@@ -38,6 +38,10 @@ const ChatInterface = () => {
           body: JSON.stringify({ message: userMsg.text, session_id: sessionId }),
         });
 
+        if (!response.ok) {
+          throw new Error(`Server status: ${response.status} ${response.statusText}`);
+        }
+
         const data = await response.json();
         
         if (data.session_id) {
@@ -56,7 +60,8 @@ const ChatInterface = () => {
       } catch (error) {
         console.error("Error sending message:", error);
         setIsThinking(false);
-        setMessages(prev => [...prev, { id: Date.now() + 1, text: "Sorry, I'm having trouble connecting to the server.", sender: 'bot' }]);
+        const errorMsg = `Error: ${error.message} ${error.cause ? '(' + error.cause + ')' : ''}`;
+        setMessages(prev => [...prev, { id: Date.now() + 1, text: errorMsg, sender: 'bot' }]);
       } finally {
         setIsLoading(false);
       }
