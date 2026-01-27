@@ -219,7 +219,7 @@ async def chat(request: ChatRequest):
     if model:
         try:
             full_prompt = f"{INZAGHI_SYSTEM_PROMPT}\n\nContext Information:\nCurrent Time: {current_time}\n{context_text}\n\nUser Message: {user_msg}\n\nResponse:"
-            llm_response = model.generate_content(full_prompt)
+            llm_response = await model.generate_content_async(full_prompt)
             response_text = llm_response.text
         except Exception as e:
             logger.error(f"LLM Error: {e}")
