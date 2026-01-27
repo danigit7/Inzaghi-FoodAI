@@ -275,65 +275,8 @@ async def chat(request: ChatRequest):
             response_text = llm_response.text
         except Exception as e:
             if "429" in str(e):
-                logger.warning("Quota exceeded. Switching to fallback...")
-                try:
-                    # Safely get current model name
-                    current_name = ""
-                    try:
-                        if model and hasattr(model, 'model_name'):
-                            current_name = model.model_name
-                    except:
-                        pass
-
-                    import asyncio
-                    
-                    # ONLY use models that actually exist in the API (from discovery)
-                    discovered = list(valid_models) if 'valid_models' in globals() else []
-                    
-                    # Prioritize "lite" and smaller models (usually have separate/higher limits)
-                    model_candidates = []
-                    for m in discovered:
-                        if "lite" in m:
-                            model_candidates.append(m)
-                    for m in discovered:
-                        if "2.0" in m and m not in model_candidates:
-                            model_candidates.append(m)
-                    for m in discovered:
-                        if m not in model_candidates:
-                            model_candidates.append(m)
-
-                    fallback_model = None
-                    llm_response = None
-                    attempts = 0
-                    max_attempts = 3
-                    
-                    # Try candidates
-                    for name in model_candidates:
-                        if attempts >= max_attempts: break
-                        if name == current_name: continue
-                        
-                        logger.info(f"Attempting fallback: {name}")
-                        try:
-                            await asyncio.sleep(1)
-                            temp_model = genai.GenerativeModel(name)
-                            llm_response = await temp_model.generate_content_async(full_prompt)
-                            if llm_response and llm_response.text:
-                                fallback_model = temp_model
-                                response_text = llm_response.text
-                                logger.info(f"Fallback success: {name}")
-                                break
-                        except Exception as inner_e:
-                            logger.warning(f"Fallback {name} failed: {inner_e}")
-                            attempts += 1
-                            continue
-                    
-                    if not fallback_model:
-                         # Final ditch effort: simple response
-                         response_text = "Maaf ka! Too many requests (Quota Exceeded) and backup brains are asleep. Please wait 1 minute."
-
-                except Exception as fallback_crash:
-                    logger.error(f"Critical Fallback Logic Failure: {fallback_crash}")
-                    response_text = "Maaf ka! System overloaded. Please try again soon."
+                logger.warning("Quota exceeded for gemini-2.5-flash.")
+                response_text = "Maaf ka! Too many requests. Please wait a minute and try again."
             else:
                 logger.error(f"LLM Error: {e}")
                 response_text = f"Maaf ka! I'm having trouble thinking right now. (Error: {str(e)})"
